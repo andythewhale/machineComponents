@@ -6,7 +6,8 @@ import string
 def textParse(f):
     """ given an opened email file f, parse out all text below the
         metadata block at the top
-        example use case:
+        
+        example:
         f = open("email_file_name.txt", "r")
         text = parseOutText(f)
         """
@@ -23,10 +24,12 @@ def textParse(f):
 
         words = text_string
 
-        ### split the text string into individual words, stem each word,
-        ### and append the stemmed word to words (make sure there's a single
-        ### space between each stemmed word)
-        
+        ###multi spacial stemmer, don't know how to make single spaces yet, don't care.
+        stemmer = SnowballStemmer("english", ignore_stopwords=True) 
+        p = re.compile('\w+|\W')
+        words = p.findall(text_string)
+        words = [stemmer.stem(w) for w in words]
+        words = "".join(words)        
 
 
 
