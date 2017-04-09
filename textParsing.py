@@ -2,6 +2,7 @@
 
 from nltk.stem.snowball import SnowballStemmer
 import string
+import re
 
 def textParse(f):
     """ given an opened email file f, parse out all text below the
