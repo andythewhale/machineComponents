@@ -1,54 +1,56 @@
+#This is a gradient descept example
+#The example uses a y = mx + b equation type
+#This example optimizes the error to a local minimum.
+#SR example
+
 from numpy import *
 
-def compute_error_for_given_points(b, m, points):
-	total_error = 0
-	for i in range(0, len(points)):
-		x = points[i, 0]
-		y = points[i, 1]
-		totalError += (y - (m * x + b)) **2
-	return totalError / float(len(points))
+#This gives us the error for the current step we're on
+def compute_error_for_line_given_points(b, m, points):
+    totalError = 0
+    for i in range(0, len(points)):
+        x = points[i, 0]
+        y = points[i, 1]
+        totalError += (y - (m * x + b)) ** 2
+    return totalError / float(len(points))
+
+#This defines the step gradient that we're going to take to figure out 'where' to go.
+def step_gradient(b_current, m_current, points, learningRate):
+    b_gradient = 0
+    m_gradient = 0
+    N = float(len(points))
+    for i in range(0, len(points)):
+        x = points[i, 0]
+        y = points[i, 1]
+        #This is the partial derivative of b
+        b_gradient += -(2/N) * (y - ((m_current * x) + b_current))
+        #This is the partial derivative of m
+        m_gradient += -(2/N) * x * (y - ((m_current * x) + b_current))
+    new_b = b_current - (learningRate * b_gradient)
+    new_m = m_current - (learningRate * m_gradient)
+    return [new_b, new_m]
+
+#This runs the gradient descent function.
+def gradient_descent_runner(points, starting_b, starting_m, learning_rate, num_iterations):
+    b = starting_b
+    m = starting_m
+    for i in range(num_iterations):
+        b, m = step_gradient(b, m, array(points), learning_rate)
+    print b
+    print m
+    return [b, m]
 
 
-def step_gradient(b_current, m_current, points, learning_rate):
-	b_gradient = 0
-	m_gradient = 0
-	N = float(len(points))
+#This runs the entire program
+def run():
+    points = genfromtxt("data.csv", delimiter=",")
+    learning_rate = 0.0001
+    initial_b = 0 # initial y-intercept guess
+    initial_m = 0 # initial slope guess
+    num_iterations = 1000
+    print "Intialize at b = {0}, m = {1}, error = {2}".format(initial_b, initial_m, compute_error_for_line_given_points(initial_b, initial_m, points))
+    [b, m] = gradient_descent_runner(points, initial_b, initial_m, learning_rate, num_iterations)
+    print "After {0} iterations b is {1}, is {2}, and error is {3}".format(num_iterations, b, m, compute_error_for_line_given_points(b, m, points))
 
-	for i in range(0, len(points)):
-		x = points[i, 0]
-		y = points[i, 1]
-		b_gradient += -(2/N) * (y - ((m_current * x) * b_current))
-		m_gradient += -(2/N) * x * (y - ((m_current * x) * b_current))
-
-	new_b = b_current - (learning_rate * b_gradient)
-	new_m = m_current - (learning_rate * m_gradient)
-
-	return [new_b, new_m]
-
-
-
-def gradient_descent_runner(points, initial_b, initial_m, learning_rate, num_iterations):
-	b = starting_b
-	m = starting_m
-
-	for i in range(num_iterations):
-		b, m = step_gradient(b, m, array(points), learning_rate)
-		print [b, m]
-
-def run ():
-	points = genfromtxt('data.csv', delimiter=',')
-	#hyperparameters
-	learning_rate=0.0001 #theres an optimal learning rate, a big part of ML & NL is optimizing this
-	#variables:
-	initial_b=0
-	initial_m=0
-	num_iterations = 1000 #small for most training sets but this will be good for us for this example.
-	[b, m] = gradient_descent_runner(points, initial_b, initial_m, learning_rate, num_iterations)
-	print(b)
-	print(m)
-
-
-
-
-if __name__=='__main':
-	run()
+if __name__ == '__main__':
+    run()
