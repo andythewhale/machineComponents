@@ -23,5 +23,5 @@ def smallToLargeSorter(arr):
 
 
 #Output should be stored like this:
-sorted = smallToLargeSorter(arr)
+sortedArray = smallToLargeSorter(arr)
 
