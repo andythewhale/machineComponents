@@ -2,6 +2,7 @@
 
 #This is BFS, the old code is there if this needs to be implemented alone.
 #Would highly suggest implementing with Generic Search.
+#NOTE: Queue is a FIFO helper function.
 
 def breadthFirstSearch(problem):
     """
